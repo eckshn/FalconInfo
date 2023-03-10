@@ -10,6 +10,9 @@ const config = {
       green: "85C96D",
       blue: "6DC9C3",
     },
+    fontFamily: {
+      sans: ["Inter", "Roboto", "sans-serif"],
+    },
     extend: {},
   },
   plugins: [],
