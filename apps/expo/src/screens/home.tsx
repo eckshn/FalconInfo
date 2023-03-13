@@ -10,20 +10,27 @@ export const HomeScreen = () => {
 
 const HomeContact: React.FC<{
   expandContact: (index: number) => void;
-  editTodo: (index: number, newTodo: string) => void;
+  editContactName: (index: number, newName: string) => void;
+  editContactNumber: (index: number, newNumber: string) => void;
   index: number;
-  firstName: string;
-  lastName: string;
+  name: string;
+  phone: number;
   //photo
-  todo: Todo;
-}> = ({ deleteTodo, editTodo, index, todo }) => {
+}> = ({
+  expandContact,
+  editContactName,
+  editContactNumber,
+  index,
+  name,
+  phone,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [newTodo, setNewTodo] = useState("");
 
   return (
     <View>
       <Text className="text-white">Todo #{index + 1}:</Text>
-      <Text className="font-bold text-white">{todo.title}</Text>
+      <Text className="font-bold text-white">{name}</Text>
       <Text className="text-white">{todo.content}</Text>
 
       <Button title="Edit Todo" onPress={() => setIsVisible((prev) => !prev)} />
