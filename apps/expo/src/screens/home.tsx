@@ -12,6 +12,7 @@ const HomeContact: React.FC<{
   expandContact: (index: number) => void;
   editContactName: (index: number, newName: string) => void;
   editContactNumber: (index: number, newNumber: string) => void;
+  deleteContact: (index: number) => void;
   index: number;
   name: string;
   phone: number;
@@ -20,6 +21,7 @@ const HomeContact: React.FC<{
   expandContact,
   editContactName,
   editContactNumber,
+  deleteContact,
   index,
   name,
   phone,
@@ -31,24 +33,19 @@ const HomeContact: React.FC<{
     <View>
       <Text className="text-white">Todo #{index + 1}:</Text>
       <Text className="font-bold text-white">{name}</Text>
-      <Text className="text-white">{todo.content}</Text>
 
-      <Button title="Edit Todo" onPress={() => setIsVisible((prev) => !prev)} />
-      <Button title="Delete Todo" onPress={() => deleteTodo(index)} />
+      <Button title={name} onPress={() => setIsVisible((prev) => !prev)} />
 
       <Modal visible={isVisible}>
         <TextInput
           className="h-1/4 border-black p-2"
-          value={newTodo}
-          onChangeText={setNewTodo}
+          value={phone.toString()}
         />
 
         <Button
-          title="Save"
+          title="Delete Contact"
           onPress={() => {
-            editTodo(index, newTodo);
-            setNewTodo("");
-            setIsVisible((prev) => !prev);
+            deleteContact(index);
           }}
         />
         <Button title="Cancel" onPress={() => setIsVisible((prev) => !prev)} />
