@@ -27,7 +27,7 @@ const HomeContact: React.FC<{
   phone,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [newTodo, setNewTodo] = useState("");
+  const [newName, setNewName] = useState("");
 
   return (
     <View>
@@ -37,6 +37,7 @@ const HomeContact: React.FC<{
       <Button title={name} onPress={() => setIsVisible((prev) => !prev)} />
 
       <Modal visible={isVisible}>
+        <TextInput className="" value={newName} onChangeText={setNewName} />
         <TextInput
           className="h-1/4 border-black p-2"
           value={phone.toString()}
@@ -48,7 +49,7 @@ const HomeContact: React.FC<{
             deleteContact(index);
           }}
         />
-        <Button title="Cancel" onPress={() => setIsVisible((prev) => !prev)} />
+        <Button title="Close" onPress={() => setIsVisible((prev) => !prev)} />
       </Modal>
     </View>
   );
