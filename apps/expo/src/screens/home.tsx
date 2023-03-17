@@ -2,54 +2,119 @@ import React, { useState } from "react";
 import { Button, Modal, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { api } from "../utils/api";
+interface Contact {
+  name: string;
+  number: string;
+}
 
 export const HomeScreen = () => {
-  return <SafeAreaView className="bg-[#262626]"></SafeAreaView>;
+  const [contacts, setContacts] = useState<Contact[]>([]);
+
+  return (
+    <SafeAreaView className="bg-[#9286a2] bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+      <View className="h-full w-full p-4">
+        <AddNewContactButton addContact={(newContact) => newContact} />
+        {contacts.map &&
+          contacts.map((contact, index) => (
+            <ContactItem
+              key={index}
+              editName={(index, contact) => {
+                setContacts((prev) =>
+                  prev.map((val, prevIndex) =>
+                    prevIndex === index ? contact : val,
+                  ),
+                );
+              }}
+              deleteContact={(index) => {
+                setContacts((prev) =>
+                  prev.filter((_, prevIndex) => prevIndex !== index),
+                );
+              }}
+              contact={contact}
+              index={index}
+            />
+          ))}
+      </View>
+    </SafeAreaView>
+  );
 };
 
-const HomeContact: React.FC<{
-  expandContact: (index: number) => void;
-  editContactName: (index: number, newName: string) => void;
-  editContactNumber: (index: number, newNumber: string) => void;
+const AddNewContactButton: React.FC<{
+  addContact: (newContact: { name: string; number: string }) => void;
+}> = ({ addContact }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+
+  return (
+    <>
+      <Button
+        title="Add New Contact"
+        onPress={() => setIsVisible((prev) => !prev)}
+      />
+
+      <Modal visible={isVisible}>
+        <TextInput
+          className="h-1/4 border-black p-2"
+          value={newName}
+          onChangeText={setNewName}
+          placeholder="Untitled"
+        />
+
+        <TextInput
+          className="h-1/4 border-black p-2"
+          value={newNumber}
+          onChangeText={setNewNumber}
+          placeholder="Press here to make new content"
+        />
+
+        <Button
+          title="Save"
+          onPress={() => {
+            addContact({ name: newName, number: newNumber });
+            setNewName("");
+            setNewNumber("");
+            setIsVisible((prev) => !prev);
+          }}
+        />
+        <Button title="Cancel" onPress={() => setIsVisible((prev) => !prev)} />
+      </Modal>
+    </>
+  );
+};
+
+const ContactItem: React.FC<{
   deleteContact: (index: number) => void;
+  editName: (index: number, newName: Contact) => void;
   index: number;
-  name: string;
-  phone: number;
-  //photo
-}> = ({
-  expandContact,
-  editContactName,
-  editContactNumber,
-  deleteContact,
-  index,
-  name,
-  phone,
-}) => {
+  contact: Contact;
+}> = ({ deleteContact, editName, index, contact }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [newName, setNewName] = useState("");
 
   return (
     <View>
-      <Text className="text-white">Todo #{index + 1}:</Text>
-      <Text className="font-bold text-white">{name}</Text>
+      <Text className="font-bold text-white">{contact.name}</Text>
 
-      <Button title={name} onPress={() => setIsVisible((prev) => !prev)} />
+      <Button title="Edit Name" onPress={() => setIsVisible((prev) => !prev)} />
+      <Button title="Delete Contact" onPress={() => deleteContact(index)} />
 
       <Modal visible={isVisible}>
-        <TextInput className="" value={newName} onChangeText={setNewName} />
         <TextInput
           className="h-1/4 border-black p-2"
-          value={phone.toString()}
+          value={newName}
+          onChangeText={setNewName}
         />
 
         <Button
-          title="Delete Contact"
+          title="Save"
           onPress={() => {
-            deleteContact(index);
+            editName(index, { ...contact, name: newName });
+            setNewName("");
+            setIsVisible((prev) => !prev);
           }}
         />
-        <Button title="Close" onPress={() => setIsVisible((prev) => !prev)} />
+        <Button title="Cancel" onPress={() => setIsVisible((prev) => !prev)} />
       </Modal>
     </View>
   );
